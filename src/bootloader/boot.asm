@@ -39,7 +39,7 @@ main:
 	mov sp, ax
 
 	mov si, msg
-	call print
+	call print_boot_screen
 	hlt
 
 	mov si, file_name
@@ -271,6 +271,17 @@ lba2chs:
 ; This function prints a whole string, where the 
 ; input string is stored in the register "SI"
 ;===============================================
+print_boot_screen:
+	mov ah, 0x3 ;get cursor position
+	mov bh, 0
+	int 0x10
+
+	mov dl, 37
+
+	mov ah, 0x2 ;set cursor position
+	mov bh, 0
+	int 0x10
+
 print:
 	push ax
 	push bx
@@ -292,7 +303,7 @@ done_print:
 	pop ax
 	ret
 
-msg DB "OS has booted!", 13, 10, 0
+msg DB 10, 10, "NOVIX", 13, 10, 0
 read_failure DB "failed t read disk !", 13, 10, 0
 file_name DB "KERNEL  BIN"
 file_cluster DW 0
